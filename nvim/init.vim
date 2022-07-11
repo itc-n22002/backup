@@ -1,19 +1,32 @@
 call plug#begin(expand('~/.config/nvim/plugged'))
-
-Plug 'luochen1990/rainbow'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'cohama/lexima.vim'
+Plug 'preservim/nerdtree'
+Plug 'SpaceVim/SpaceVim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'rust-lang/rust.vim'
 Plug 'vim-jp/vimdoc-ja'
+Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'simeji/winresizer'
-Plug 'rust-lang/rust.vim'
 call plug#end()
+
+let g:rustfmt_autosave = 1
+
+let g:rainbow#max_level = 16
+let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+
 "Key config
 nnoremap <Tab><Tab> gT
 cnoreabbrev tn tabnew
 cnoreabbrev vs vsplit
 cnoreabbrev cl close
 nnoremap <enter><enter> <C-w><C-w> 
+cnoreabbrev rai RainbowParentheses
+cnoreabbrev rai! :RainbowParentheses
+cnoreabbrev ne NERDTree 
 
 " Status Line Settings
 set showcmd
@@ -43,31 +56,6 @@ endfunction
 
 let g:fzf_preview_window = ['right:50%', 'ctrl-/']
 
-let g:rainbow_active = 1
-let g:rainbow_conf = {
-\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
-\	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-\	'operators': '_,_',
-\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-\	'separately': {
-\		'*': {},
-\		'tex': {
-\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
-\		},
-\		'lisp': {
-\			'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
-\		},
-\		'vim': {
-\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
-\		},
-\		'html': {
-\			'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
-\		},
-\		'css': 0,
-\	}
-\}
-
-let g:rustfmt_autosave = 1
 let g:coc_global_extensions = ['coc-json', 'coc-git']
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
@@ -141,8 +129,8 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call ShowDocumentation()<CR>
 
 function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
+    if CocAction('hasProvider', 'hover')
+       call CocActionAsync('doHover')
   else
     call feedkeys('K', 'in')
   endif
@@ -236,3 +224,4 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+autocmd VimEnter * NERDTree
